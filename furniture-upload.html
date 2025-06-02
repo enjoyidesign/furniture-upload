@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>公益家具再利用家具上傳表單</title>
+    <style>
+        :root {
+            --primary-color: #4CAF50;
+            --secondary-color: #45a049;
+            --accent-color: #f8f9fa;
+            --border-color: #ddd;
+            --text-color: #333;
+            --light-text: #666;
+            --section-border-color: #4472c4;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: '微軟正黑體', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: #f0f7fa;
+            padding: 20px;
+            background-image: url('https://ap11.ragic.com/sims/file.jsp?a=joycehuang&f=R30VLnrZjY%40funiture-2%20(1600%20x%20900%20%E5%83%8F%E7%B4%A0).svg');
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-attachment: fixed;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 8px;
+            font-size: 28px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: var(--light-text);
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+        
+        h2 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--section-border-color);
+            padding-bottom: 10px;
+            margin: 25px 0 15px;
+            font-size: 20px;
+            position: relative;
+        }
+        
+        h2::before {
+            content: "";
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100px;
+            height: 2px;
+            background-color: var(--section-border-color);
+        }
+        
+        .form-section {
+            margin-bottom: 30px;
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+            margin-top: 20px;
+        }
+        
+        .divider {
+            height: 20px;
+            background-color: transparent;
+            margin: 10px 0;
+            position: relative;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        
+        input[type="text"],
+        input[type="tel"],
+        input[type="email"],
+        input[type="number"],
+        input[type="date"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input[type="text"]:focus,
+        input[type="tel"]:focus,
+        input[type="email"]:focus,
+        input[type="number"]:focus,
+        input[type="date"]:focus,
+        select:focus,
+        textarea:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
+        }
+        
+        input[readonly] {
+            background-color: #f5f5f5;
+            cursor: not-allowed;
+        }
+        
+        .required::after {
+            content: "*";
+            color: red;
+            margin-left: 4px;
+        }
+        
+        .photo-upload {
+            border: 2px dashed var(--border-color);
+            padding: 20px;
+            text-align: center;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        
+        .photo-upload p {
+            margin-bottom: 10px;
+            color: var(--light-text);
+        }
+        
+        .info-text {
+            background-color: var(--accent-color);
+            padding: 15px;
+            border-radius: 4px;
+            border-left: 4px solid var(--primary-color);
+            margin-bottom: 20px;
+        }
+        
+        .info-text ul {
+            padding-left: 20px;
+        }
+        
+        .info-text li {
+            margin-bottom: 10px;
+        }
+        
+        button {
+            background-color: #4472c4;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 18px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #3a63ad;
+        }
+        
+        .submit-button {
+            background-color: #4472c4;
+            color: white;
+            width: 180px;
+            display: block;
+            margin: 20px auto;
+        }
+        
+        .add-button {
+            background-color: #4472c4;
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+        
+        .cancel-button {
+            background-color: #888;
+            padding: 8px 16px;
+            font-size: 14px;
+            margin-left: 5px;
+        }
+        
+        .cancel-button:hover {
+            background-color: #777;
+        }
+        
+        .confirm-button {
+            background-color: var(--primary-color);
+            padding: 8px 16px;
+            font-size: 14px;
+            margin-right: 5px;
+        }
+        
+        .confirm-button:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .button-group {
+            display: flex;
+            margin-top: 10px;
+        }
+        
+        .browse-button {
+            background-color: #4472c4;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0 -10px;
+        }
+        
+        .col-half {
+            flex: 0 0 50%;
+            padding: 0 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .col-half {
+                flex: 0 0 100%;
+            }
+        }
+        
+        .custom-option {
+            margin-top: 10px;
+            display: none;
+        }
+        
+        .custom-option.show {
+            display: block;
+        }
+        
+        .input-with-button {
+            display: flex;
+        }
+        
+        .input-with-button select {
+            flex: 1;
+        }
+        
+        .input-with-button button {
+            margin-left: 10px;
+        }
+        
+        .date-input-group {
+            display: flex;
+            align-items: center;
+        }
+        
+        .date-input-group input {
+            flex: 1;
+        }
+        
+        .date-input-group span {
+            padding: 0 10px;
+            color: var(--light-text);
+        }
+        
+        .form-footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: var(--light-text);
+        }
+        
+        .thumbnail-preview {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .thumbnail {
+            width: 100px;
+            height: 100px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .thumbnail .remove-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(255, 0, 0, 0.7);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>公益家具再利用平台 家具上傳表單</h1>
+        <div class="subtitle">讓您不需要的家具，成為他人寶貴資源</div>
+        
+        <form id="furnitureForm" method="POST">
+            <!-- 第一區塊：家具提供者資訊 -->
+            <div class="form-section">
+                <h2>家具提供者資訊</h2>
+                
+                <div class="row">
+                    <div class="form-group col-half">
+                        <label for="name" class="required">姓名</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    
+                    <div class="form-group col-half">
+                        <label for="phone" class="required">連絡電話</label>
+                        <input type="tel" id="phone" name="phone" required>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="form-group col-half">
+                        <label for="email" class="required">E-mail</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    
+                    <div class="form-group col-half">
+                        <label for="lineId">LINE ID</label>
+                        <input type="text" id="lineId" name="lineId" readonly placeholder="(系統自動帶出)">
+                    </div>
+                </div>
+<div class="row">
+    <div class="form-group col-half">
+        <label for="companyName">公司名稱</label>
+        <input type="text" id="companyName" name="companyName">
+    </div>
+    
+    <div class="form-group col-half">
+        <label for="companyTaxId">公司統編</label>
+        <input type="text" id="companyTaxId" name="companyTaxId">
+    </div>
+</div>
+            </div>
+            
+            <div class="divider"></div>
+            
+            <!-- 第二區塊：家具資訊 -->
+            <div class="form-section">
+                <h2>家具資訊</h2>
+                
+                <div class="form-group">
+    <label for="furnitureId">家具編號</label>
+    <input type="text" id="furnitureId" name="furnitureId" readonly placeholder="系統自動編號">
+</div>
+
+<div class="row">
+    <div class="form-group col-half">
+        <label for="furnitureName" class="required">家具名稱</label>
+        <input type="text" id="furnitureName" name="furnitureName" required>
+    </div>
+    <!-- 其他原有欄位... -->
+                    
+                    <div class="form-group col-half">
+                        <label for="furnitureCategory" class="required">家具類別</label>
+                        <div class="input-with-button">
+                            <select id="furnitureCategory" name="furnitureCategory" required>
+                                <option value="" disabled selected>請選擇類別</option>
+                                <option value="desk">書桌</option>
+                                <option value="chair">椅子</option>
+                                <option value="shelf">書架</option>
+                                <option value="cabinet">收納櫃</option>
+                                <option value="sofa">沙發</option>
+                                <option value="bed">床架</option>
+                                <option value="table">餐桌</option>
+                                <option value="other">其他</option>
+                                <option value="custom">自行新增類別</option>
+                            </select>
+                            <button type="button" id="addCategoryBtn" class="add-button">新增</button>
+                        </div>
+                        <div id="customCategoryGroup" class="custom-option">
+                            <input type="text" id="customCategory" name="customCategory" placeholder="輸入類別名稱">
+                            <div class="button-group">
+                                <button type="button" id="confirmCategoryBtn" class="confirm-button">確認</button>
+                                <button type="button" id="cancelCategoryBtn" class="cancel-button">取消</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="location" class="required">家具所在地</label>
+                    <select id="city" name="city" required>
+                        <option value="" disabled selected>請選擇縣市</option>
+                        <option value="taipei">台北市</option>
+                        <option value="newtaipei">新北市</option>
+                        <option value="taoyuan">桃園市</option>
+                        <option value="taichung">台中市</option>
+                        <option value="tainan">台南市</option>
+                        <option value="kaohsiung">高雄市</option>
+                        <option value="hsinchu_city">新竹市</option>
+                        <option value="hsinchu_county">新竹縣</option>
+                        <option value="miaoli">苗栗縣</option>
+                        <option value="changhua">彰化縣</option>
+                        <option value="nantou">南投縣</option>
+                        <option value="yunlin">雲林縣</option>
+                        <option value="chiayi_city">嘉義市</option>
+                        <option value="chiayi_county">嘉義縣</option>
+                        <option value="pingtung">屏東縣</option>
+                        <option value="yilan">宜蘭縣</option>
+                        <option value="hualien">花蓮縣</option>
+                        <option value="taitung">台東縣</option>
+                        <option value="penghu">澎湖縣</option>
+                        <option value="kinmen">金門縣</option>
+                        <option value="lienchiang">連江縣</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="address" class="required">詳細地址</label>
+                    <input type="text" id="address" name="address" required placeholder="請輸入詳細地址">
+                </div>
+                
+                <div class="row">
+                    <div class="form-group col-half">
+                        <label for="purchaseYear" class="required">家具購買年份</label>
+                        <select id="purchaseYear" name="purchaseYear" required>
+                            <option value="" disabled selected>請選擇年份</option>
+                            <!-- 年份選項將由JavaScript生成 -->
+                        </select>
+                    </div>
+                    
+                    <div class="form-group col-half">
+                        <label for="condition" class="required">家具新舊程度</label>
+                        <select id="condition" name="condition" required>
+                            <option value="" disabled selected>請選擇新舊程度</option>
+                            <option value="new">全新</option>
+                            <option value="90">九成新</option>
+                            <option value="70">七成新</option>
+                            <option value="50">五成新</option>
+                            <option value="30">三成新</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="form-group col-half">
+    <label for="material" class="required">家具材質</label>
+    <select id="material" name="material" required>
+        <option value="" disabled selected>請選擇材質</option>
+        <option value="wood">木製品</option>
+        <option value="plastic">塑膠製品</option>
+        <option value="metal">金屬</option>
+        <option value="fabric">布</option>
+        <option value="other">其他</option>
+    </select>
+</div>
+                    
+                    <div class="form-group col-half">
+                        <label for="weight" class="required">家具重量 (公斤)(保守估計)</label>
+                        <input type="number" id="weight" name="weight" min="0" step="0.1" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="photos" class="required">家具照片上傳</label>
+                    <div class="photo-upload">
+                        <p>請上傳家具照片（最多4張，每張不超過5MB，支援JPG/PNG格式）</p>
+                        <input type="file" id="photos" name="photos" accept=".jpg,.jpeg,.png" multiple required>
+                        <div id="thumbnailPreview" class="thumbnail-preview"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="divider"></div>
+            
+            <!-- 第三區塊：領取時間說明 -->
+            <div class="form-section">
+                <h2>領取時間說明</h2>
+                
+                <div class="info-text">
+                    <p>為確保公益資源能有效流轉，本平台訂定以下兩階段領取時限：</p>
+                    <ol>
+                        <li>
+                            <strong>第一領取期限（公益組織優先期）</strong>
+                            <ul>
+                                <li><strong>期間</strong>：自公告日起至第一領取截止日止。</li>
+                                <li><strong>對象</strong>：開放已通過審核之公益單位優先登記領取。</li>
+                                <li><strong>機制</strong>：若於本階段結束前，仍無公益組織完成領取登記，該件家具即自動進入第二階段。</li>
+                            </ul>
+                        </li>
+                        <li>
+                            <strong>第二領取期限（一般民眾開放期）</strong>
+                            <ul>
+                                <li><strong>期間</strong>：自第一階段結束翌日起至第二領取截止日止。</li>
+                                <li><strong>對象</strong>：開放所有一般民眾免費登記領取。</li>
+                                <li><strong>後續處理</strong>：如逾期仍無人領取，遠築團隊將與家具提供者協商，決定是否
+                                    <ul>
+                                        <li>延長領取期限，或</li>
+                                        <li>將家具移至指定倉庫，持續開放領取。</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                    </ol>
+                </div>
+                
+                <div class="row">
+                    <div class="form-group col-half">
+                        <label for="firstDeadline" class="required">第一領取期限</label>
+                        <input type="date" id="firstDeadline" name="firstDeadline" required>
+                    </div>
+                    
+                    <div class="form-group col-half">
+                        <label for="secondDeadline" class="required">第二領取期限</label>
+                        <input type="date" id="secondDeadline" name="secondDeadline" required>
+                    </div>
+                </div>
+            </div>
+            
+            <button type="submit" class="submit-button">提交登記表單</button>
+            
+            <div class="form-footer">
+                <p>所有標記有 * 符號的欄位均為必填項目</p>
+            </div>
+        </form>
+    </div>
+
+    <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // 城市選擇後自動預填詳細地址
+    const citySelect = document.getElementById('city');
+    const addressInput = document.getElementById('address');
+    
+    // 城市中文名稱對照表
+    const cityNames = {
+        'taipei': '台北市',
+        'newtaipei': '新北市',
+        'taoyuan': '桃園市',
+        'taichung': '台中市',
+        'tainan': '台南市',
+        'kaohsiung': '高雄市',
+        'hsinchu_city': '新竹市',
+        'hsinchu_county': '新竹縣',
+        'miaoli': '苗栗縣',
+        'changhua': '彰化縣',
+        'nantou': '南投縣',
+        'yunlin': '雲林縣',
+        'chiayi_city': '嘉義市',
+        'chiayi_county': '嘉義縣',
+        'pingtung': '屏東縣',
+        'yilan': '宜蘭縣',
+        'hualien': '花蓮縣',
+        'taitung': '台東縣',
+        'penghu': '澎湖縣',
+        'kinmen': '金門縣',
+        'lienchiang': '連江縣'
+    };
+    
+    citySelect.addEventListener('change', function() {
+        if (this.value) {
+            // 如果詳細地址是空的或只包含之前選擇的縣市，則直接設置
+            if (!addressInput.value || addressInput.value.trim() === '' || 
+                Object.values(cityNames).some(cityName => addressInput.value.trim() === cityName)) {
+                addressInput.value = cityNames[this.value];
+            } 
+            // 如果詳細地址已有值且不是以選擇的縣市開頭，則將縣市名稱加到開頭
+            else if (!addressInput.value.startsWith(cityNames[this.value])) {
+                addressInput.value = cityNames[this.value] + addressInput.value;
+            }
+        }
+    });
+    
+    // 填充年份選項 (從當前年份到1980年，最後加上1980年以前)
+    const yearSelect = document.getElementById('purchaseYear');
+    const currentYear = new Date().getFullYear();
+    
+    // 清空現有的選項
+    yearSelect.innerHTML = '<option value="" disabled selected>請選擇年份</option>';
+    
+    // 添加2025-1980年的選項
+    for (let year = currentYear; year >= 1980; year--) {
+        const option = document.createElement('option');
+        option.value = year;
+        option.textContent = year + '年';
+        yearSelect.appendChild(option);
+    }
+    
+    // 添加"1980年以前"選項
+    const beforeOption = document.createElement('option');
+    beforeOption.value = 'before1980';
+    beforeOption.textContent = '1980年以前';
+    yearSelect.appendChild(beforeOption);
+    
+    // 自定義家具類別功能
+    const categorySelect = document.getElementById('furnitureCategory');
+    const customCategoryGroup = document.getElementById('customCategoryGroup');
+    const customCategoryInput = document.getElementById('customCategory');
+    const addCategoryBtn = document.getElementById('addCategoryBtn');
+    const confirmCategoryBtn = document.getElementById('confirmCategoryBtn');
+    const cancelCategoryBtn = document.getElementById('cancelCategoryBtn');
+    
+    // 修復自定義類別功能
+    addCategoryBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        categorySelect.value = 'custom';
+        customCategoryGroup.classList.add('show');
+        customCategoryInput.required = true;
+        customCategoryInput.focus();
+    });
+    
+    confirmCategoryBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        if (customCategoryInput.value.trim() !== '') {
+            const newOption = document.createElement('option');
+            newOption.value = 'custom_' + customCategoryInput.value.trim();
+            newOption.textContent = customCategoryInput.value.trim();
+            
+            // 在倒數第二個位置插入新選項（在"其他"和"自行新增類別"之前）
+            const otherOption = categorySelect.querySelector('option[value="other"]');
+            categorySelect.insertBefore(newOption, otherOption);
+            
+            // 選擇新建立的選項
+            categorySelect.value = newOption.value;
+            
+            // 重置並隱藏自定義輸入區域
+            customCategoryInput.value = '';
+            customCategoryGroup.classList.remove('show');
+            customCategoryInput.required = false;
+        } else {
+            alert('請輸入類別名稱！');
+        }
+    });
+    
+    cancelCategoryBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        categorySelect.value = '';
+        customCategoryInput.value = '';
+        customCategoryGroup.classList.remove('show');
+        customCategoryInput.required = false;
+    });
+    
+    categorySelect.addEventListener('change', function() {
+        if (this.value === 'custom') {
+            customCategoryGroup.classList.add('show');
+            customCategoryInput.required = true;
+            customCategoryInput.focus();
+        } else {
+            customCategoryGroup.classList.remove('show');
+            customCategoryInput.required = false;
+        }
+    });
+    
+    // 照片預覽功能
+    const photoInput = document.getElementById('photos');
+    const thumbnailPreview = document.getElementById('thumbnailPreview');
+    const maxFileSize = 5 * 1024 * 1024; // 5MB
+    const maxFiles = 4;
+    
+    photoInput.addEventListener('change', function(e) {
+        thumbnailPreview.innerHTML = '';
+        const files = Array.from(this.files);
+        
+        if (files.length > maxFiles) {
+            alert(`最多只能上傳${maxFiles}張照片！`);
+            this.value = '';
+            return;
+        }
+        
+        let hasInvalidFile = false;
+        
+        files.forEach((file, index) => {
+            if (file.size > maxFileSize) {
+                alert(`檔案 "${file.name}" 超過5MB大小限制！`);
+                hasInvalidFile = true;
+                return;
+            }
+            
+            if (!['image/jpeg', 'image/jpg', 'image/png'].includes(file.type)) {
+                alert(`檔案 "${file.name}" 不是支援的格式！請上傳JPG或PNG格式。`);
+                hasInvalidFile = true;
+                return;
+            }
+            
+            const thumbnail = document.createElement('div');
+            thumbnail.className = 'thumbnail';
+            
+            const img = document.createElement('img');
+            img.file = file;
+            thumbnail.appendChild(img);
+            
+            const removeBtn = document.createElement('button');
+            removeBtn.className = 'remove-btn';
+            removeBtn.textContent = '×';
+            removeBtn.type = 'button';
+            removeBtn.onclick = function() {
+                thumbnail.remove();
+                if (thumbnailPreview.children.length === 0) {
+                    photoInput.value = '';
+                }
+            };
+            thumbnail.appendChild(removeBtn);
+            
+            thumbnailPreview.appendChild(thumbnail);
+            
+            const reader = new FileReader();
+            reader.onload = (function(aImg) { 
+                return function(e) { 
+                    aImg.src = e.target.result; 
+                }; 
+            })(img);
+            reader.readAsDataURL(file);
+        });
+        
+        if (hasInvalidFile) {
+            this.value = '';
+            thumbnailPreview.innerHTML = '';
+        }
+    });
+    
+    // 設置日期選擇最小值為3天後
+    const setMinDates = function() {
+        const today = new Date();
+        const minDate = new Date(today);
+        minDate.setDate(today.getDate() + 3);
+        
+        const firstDeadline = document.getElementById('firstDeadline');
+        const secondDeadline = document.getElementById('secondDeadline');
+        
+        const formattedMinDate = minDate.toISOString().split('T')[0];
+        firstDeadline.min = formattedMinDate;
+        secondDeadline.min = formattedMinDate;
+        
+        // 第二期限應在第一期限之後
+        firstDeadline.addEventListener('change', function() {
+            if (this.value) {
+                const secondMinDate = new Date(this.value);
+                secondMinDate.setDate(secondMinDate.getDate() + 1);
+                secondDeadline.min = secondMinDate.toISOString().split('T')[0];
+                
+                if (secondDeadline.value && new Date(secondDeadline.value) <= new Date(this.value)) {
+                    secondDeadline.value = '';
+                }
+            }
+        });
+    };
+    
+    setMinDates();
+    
+    // URL參數預填功能
+    const fillFormFromUrl = function() {
+        const params = new URLSearchParams(window.location.search);
+        
+        document.querySelectorAll('#furnitureForm input:not([type="file"]), #furnitureForm select').forEach(element => {
+            const paramValue = params.get(element.name);
+            if (paramValue) {
+                if (element.id === 'lineId' || element.id === 'furnitureId') {
+                    element.value = paramValue;
+                } 
+                else if (!element.hasAttribute('readonly')) {
+                    element.value = paramValue;
+                    
+                    if (element.tagName === 'SELECT') {
+                        const event = new Event('change');
+                        element.dispatchEvent(event);
+                    }
+                }
+            }
+        });
+    };
+    
+    fillFormFromUrl();
+    
+    // 表單提交處理
+    document.getElementById('furnitureForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // 立即顯示感謝頁面
+        const formContainer = document.querySelector('.container');
+        formContainer.innerHTML = `
+            <div class="success-message" style="text-align: center; padding: 50px 20px;">
+                <h2 style="color: var(--primary-color); margin-bottom: 20px;">感謝！已收到您提交的資訊。</h2>
+                <p>我們將盡快處理您的家具再利用申請。</p>
+            </div>
+        `;
+        
+        // 滾動到頁面頂部
+        window.scrollTo(0, 0);
+        
+        // 背景送出資料到webhook
+        const formData = new FormData(this);
+        fetch('https://hook.us1.make.com/xw82xgsdrydeb28zeqk98ji6obcnpzsy', {
+            method: 'POST',
+            body: formData
+        })
+        .catch(error => {
+            console.error('提交失敗:', error);
+        });
+    });
+});
+    </script>
+</body>
+</html>
