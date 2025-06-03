@@ -564,7 +564,7 @@
     </div>
 
     <script>
-  document.addEventListener('DOMContentLoaded', function() {
+ document.addEventListener('DOMContentLoaded', function() {
     // 城市選擇後自動預填詳細地址
     const citySelect = document.getElementById('city');
     const addressInput = document.getElementById('address');
@@ -610,7 +610,7 @@
     
     // 填充年份選項 (從當前年份到1980年，最後加上1980年以前)
     const yearSelect = document.getElementById('purchaseYear');
-    const currentYear = new Date().getFullYear();
+    const currentYear = new Date().getFullYear(); // 動態獲取當前年份
     
     // 清空現有的選項
     yearSelect.innerHTML = '<option value="" disabled selected>請選擇年份</option>';
@@ -639,7 +639,7 @@
     
     // 修復自定義類別功能
     addCategoryBtn.addEventListener('click', function(e) {
-        e.preventDefault();
+        e.preventDefault(); // 防止表單提交
         categorySelect.value = 'custom';
         customCategoryGroup.classList.add('show');
         customCategoryInput.required = true;
@@ -647,7 +647,7 @@
     });
     
     confirmCategoryBtn.addEventListener('click', function(e) {
-        e.preventDefault();
+        e.preventDefault(); // 防止表單提交
         if (customCategoryInput.value.trim() !== '') {
             const newOption = document.createElement('option');
             newOption.value = 'custom_' + customCategoryInput.value.trim();
@@ -670,7 +670,7 @@
     });
     
     cancelCategoryBtn.addEventListener('click', function(e) {
-        e.preventDefault();
+        e.preventDefault(); // 防止表單提交
         categorySelect.value = '';
         customCategoryInput.value = '';
         customCategoryGroup.classList.remove('show');
@@ -732,6 +732,7 @@
             removeBtn.type = 'button';
             removeBtn.onclick = function() {
                 thumbnail.remove();
+                // 重新創建input以清除已選文件
                 if (thumbnailPreview.children.length === 0) {
                     photoInput.value = '';
                 }
@@ -775,6 +776,7 @@
                 secondMinDate.setDate(secondMinDate.getDate() + 1);
                 secondDeadline.min = secondMinDate.toISOString().split('T')[0];
                 
+                // 如果第二期限早於第一期限，則清空第二期限
                 if (secondDeadline.value && new Date(secondDeadline.value) <= new Date(this.value)) {
                     secondDeadline.value = '';
                 }
@@ -788,15 +790,19 @@
     const fillFormFromUrl = function() {
         const params = new URLSearchParams(window.location.search);
         
+        // 遍歷表單中的所有input、select元素
         document.querySelectorAll('#furnitureForm input:not([type="file"]), #furnitureForm select').forEach(element => {
             const paramValue = params.get(element.name);
             if (paramValue) {
+                // 對於lineId和furnitureId欄位，即使是唯讀也允許通過URL設置
                 if (element.id === 'lineId' || element.id === 'furnitureId') {
                     element.value = paramValue;
                 } 
+                // 其他唯讀欄位不允許通過URL設置
                 else if (!element.hasAttribute('readonly')) {
                     element.value = paramValue;
                     
+                    // 觸發select的change事件以處理相依欄位
                     if (element.tagName === 'SELECT') {
                         const event = new Event('change');
                         element.dispatchEvent(event);
@@ -824,8 +830,92 @@
         // 滾動到頁面頂部
         window.scrollTo(0, 0);
         
-        // 背景送出資料到webhook
+        // 準備FormData並轉換中文
         const formData = new FormData(this);
+        
+        // 縣市中文對照表
+        const cityNames = {
+            'taipei': '台北市',
+            'newtaipei': '新北市',
+            'taoyuan': '桃園市',
+            'taichung': '台中市',
+            'tainan': '台南市',
+            'kaohsiung': '高雄市',
+            'hsinchu_city': '新竹市',
+            'hsinchu_county': '新竹縣',
+            'miaoli': '苗栗縣',
+            'changhua': '彰化縣',
+            'nantou': '南投縣',
+            'yunlin': '雲林縣',
+            'chiayi_city': '嘉義市',
+            'chiayi_county': '嘉義縣',
+            'pingtung': '屏東縣',
+            'yilan': '宜蘭縣',
+            'hualien': '花蓮縣',
+            'taitung': '台東縣',
+            'penghu': '澎湖縣',
+            'kinmen': '金門縣',
+            'lienchiang': '連江縣'
+        };
+        
+        // 家具類別中文對照表
+        const categoryNames = {
+            'desk': '書桌',
+            'chair': '椅子',
+            'shelf': '書架',
+            'cabinet': '收納櫃',
+            'sofa': '沙發',
+            'bed': '床架',
+            'table': '餐桌',
+            'other': '其他'
+        };
+        
+        // 家具材質中文對照表
+        const materialNames = {
+            'wood': '木製品',
+            'plastic': '塑膠製品',
+            'metal': '金屬',
+            'fabric': '布',
+            'other': '其他'
+        };
+        
+        // 家具新舊程度中文對照表
+        const conditionNames = {
+            'new': '全新',
+            '90': '九成新',
+            '70': '七成新',
+            '50': '五成新',
+            '30': '三成新'
+        };
+        
+        // 轉換縣市為中文
+        if (formData.get('city') && cityNames[formData.get('city')]) {
+            formData.set('city', cityNames[formData.get('city')]);
+        }
+        
+        // 轉換家具類別為中文
+        if (formData.get('furnitureCategory')) {
+            const category = formData.get('furnitureCategory');
+            if (category.startsWith('custom_')) {
+                // 自定義類別，取出實際名稱
+                formData.set('furnitureCategory', category.replace('custom_', ''));
+            } else if (categoryNames[category]) {
+                // 預設類別，轉換為中文
+                formData.set('furnitureCategory', categoryNames[category]);
+            }
+        }
+        
+        // 轉換家具材質為中文
+        if (formData.get('material') && materialNames[formData.get('material')]) {
+            formData.set('material', materialNames[formData.get('material')]);
+        }
+        
+        // 轉換家具新舊程度為中文
+        if (formData.get('condition') && conditionNames[formData.get('condition')]) {
+            formData.set('condition', conditionNames[formData.get('condition')]);
+        }
+        
+        // 背景送出資料到webhook
         fetch('https://hook.us1.make.com/xw82xgsdrydeb28zeqk98ji6obcnpzsy', {
             method: 'POST',
             body: formData
@@ -835,6 +925,6 @@
         });
     });
 });
-    </script>
+</script>
 </body>
 </html>
