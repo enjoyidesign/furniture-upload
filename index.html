@@ -586,10 +586,10 @@
                     <p>為確保資源能有效流轉，本平台訂定以下兩階段領取時限：</p>
                     <ol>
                         <li>
-                            <strong>第一領取期限（社福團體/學校單位優先期）</strong>
+                            <strong>第一領取期限（社福單位/學校單位優先期）</strong>
                             <ul>
                                 <li><strong>期間</strong>：自公告日起至第一領取截止日止。</li>
-                                <li><strong>對象</strong>：開放已通過審核之社福團體/學校單位優先登記領取。</li>
+                                <li><strong>對象</strong>：開放已通過審核之社福單位/學校單位優先登記領取。</li>
                                 <li><strong>機制</strong>：若於本階段結束前，仍無單位完成領取登記，該件家具即自動進入第二階段。</li>
                             </ul>
                         </li>
@@ -847,27 +847,38 @@
                 }
             });
             
-            // 設置日期選擇，第一期限不限制，第二期限依第一期限而定
+            // 設置日期選擇，第二期限必須在第一期限之後
             const setMinDates = function() {
                 const firstDeadline = document.getElementById('firstDeadline');
                 const secondDeadline = document.getElementById('secondDeadline');
                 
                 // 第一期限不設最小值限制
-                // firstDeadline.min = ''; // 不需要設定，預設就沒有限制
                 
                 // 第二期限應在第一期限之後
                 firstDeadline.addEventListener('change', function() {
                     if (this.value) {
-                        const secondMinDate = new Date(this.value);
-                        secondMinDate.setDate(secondMinDate.getDate() + 1);
+                        const firstDate = new Date(this.value);
+                        const secondMinDate = new Date(firstDate);
+                        secondMinDate.setDate(firstDate.getDate() + 1);
                         secondDeadline.min = secondMinDate.toISOString().split('T')[0];
                         
-                        // 如果第二期限早於第一期限，則清空第二期限
-                        if (secondDeadline.value && new Date(secondDeadline.value) <= new Date(this.value)) {
+                        // 如果第二期限早於或等於第一期限，則清空第二期限
+                        if (secondDeadline.value && new Date(secondDeadline.value) <= firstDate) {
                             secondDeadline.value = '';
                         }
+                    } else {
+                        // 如果第一期限被清空，移除第二期限的限制
+                        secondDeadline.min = '';
                     }
                 });
+                
+                // 也要檢查頁面載入時的狀況
+                if (firstDeadline.value) {
+                    const firstDate = new Date(firstDeadline.value);
+                    const secondMinDate = new Date(firstDate);
+                    secondMinDate.setDate(firstDate.getDate() + 1);
+                    secondDeadline.min = secondMinDate.toISOString().split('T')[0];
+                }
             };
             
             setMinDates();
