@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>公益家具再利用家具上傳表單</title>
+    <title>家具再利用家具上傳表單</title>
     <style>
         :root {
             --primary-color: #4CAF50;
@@ -583,14 +583,14 @@
                 <h2>領取時間說明</h2>
                 
                 <div class="info-text">
-                    <p>為確保資源能有效流轉，本平台訂定以下兩階段領取時限：</p>
+                    <p>為確保公益資源能有效流轉，本平台訂定以下兩階段領取時限：</p>
                     <ol>
                         <li>
-                            <strong>第一領取期限（社福單位/學校單位優先期）</strong>
+                            <strong>第一領取期限（社福單位/學校優先期）</strong>
                             <ul>
                                 <li><strong>期間</strong>：自公告日起至第一領取截止日止。</li>
-                                <li><strong>對象</strong>：開放已通過審核之社福單位/學校單位優先登記領取。</li>
-                                <li><strong>機制</strong>：若於本階段結束前，仍無單位完成領取登記，該件家具即自動進入第二階段。</li>
+                                <li><strong>對象</strong>：開放已通過審核之社福單位/學校優先登記領取。</li>
+                                <li><strong>機制</strong>：若於本階段結束前，仍無社福單位/學校完成領取登記，該件家具即自動進入第二階段。</li>
                             </ul>
                         </li>
                         <li>
@@ -847,45 +847,32 @@
                 }
             });
             
-            // 設置日期選擇，第二期限必須在第一期限之後
+            // 設置日期選擇最小值為3天後
             const setMinDates = function() {
+                const today = new Date();
+                const minDate = new Date(today);
+                minDate.setDate(today.getDate() + 3);
+                
                 const firstDeadline = document.getElementById('firstDeadline');
                 const secondDeadline = document.getElementById('secondDeadline');
                 
-                // 第一期限不設最小值限制
+                const formattedMinDate = minDate.toISOString().split('T')[0];
+                firstDeadline.min = formattedMinDate;
+                secondDeadline.min = formattedMinDate;
                 
                 // 第二期限應在第一期限之後
                 firstDeadline.addEventListener('change', function() {
-                    console.log('第一期限改變:', this.value); // 除錯用
                     if (this.value) {
-                        const firstDate = new Date(this.value);
-                        const secondMinDate = new Date(firstDate);
-                        secondMinDate.setDate(firstDate.getDate() + 1);
-                        const minDateString = secondMinDate.toISOString().split('T')[0];
-                        secondDeadline.min = minDateString;
-                        console.log('設定第二期限最小值:', minDateString); // 除錯用
+                        const secondMinDate = new Date(this.value);
+                        secondMinDate.setDate(secondMinDate.getDate() + 1);
+                        secondDeadline.min = secondMinDate.toISOString().split('T')[0];
                         
-                        // 如果第二期限早於或等於第一期限，則清空第二期限
-                        if (secondDeadline.value && new Date(secondDeadline.value) <= firstDate) {
+                        // 如果第二期限早於第一期限，則清空第二期限
+                        if (secondDeadline.value && new Date(secondDeadline.value) <= new Date(this.value)) {
                             secondDeadline.value = '';
-                            console.log('清空第二期限，因為日期衝突'); // 除錯用
                         }
-                    } else {
-                        // 如果第一期限被清空，移除第二期限的限制
-                        secondDeadline.min = '';
-                        console.log('移除第二期限限制'); // 除錯用
                     }
                 });
-                
-                // 也要檢查頁面載入時的狀況
-                if (firstDeadline.value) {
-                    const firstDate = new Date(firstDeadline.value);
-                    const secondMinDate = new Date(firstDate);
-                    secondMinDate.setDate(firstDate.getDate() + 1);
-                    const minDateString = secondMinDate.toISOString().split('T')[0];
-                    secondDeadline.min = minDateString;
-                    console.log('頁面載入時設定第二期限最小值:', minDateString); // 除錯用
-                }
             };
             
             setMinDates();
@@ -894,22 +881,33 @@
             const fillFormFromUrl = function() {
                 const params = new URLSearchParams(window.location.search);
                 
-                // 中文到英文的對照表
-                const chineseToEnglish = {
-                    // 城市對照
-                    '台北市': 'taipei',
-                    '新北市': 'newtaipei',
-                    '桃園市': 'taoyuan',
-                    '台中市': 'taichung',
-                    '台南市': 'tainan',
-                    '高雄市': 'kaohsiung',
-                    '新竹市': 'hsinchu_city',
-                    '新竹縣': 'hsinchu_county',
-                    '苗栗縣': 'miaoli',
-                    '彰化縣': 'changhua',
-                    '南投縣': 'nantou',
-                    '雲林縣': 'yunlin',
-                    '
+                // 遍歷表單中的所有input、select元素
+                document.querySelectorAll('#furnitureForm input:not([type="file"]), #furnitureForm select').forEach(element => {
+                    const paramValue = params.get(element.name);
+                    if (paramValue) {
+                        // 對於lineId和furnitureId欄位，即使是唯讀也允許通過URL設置
+                        if (element.id === 'lineId' || element.id === 'furnitureId') {
+                            element.value = paramValue;
+                        } 
+                        // 其他唯讀欄位不允許通過URL設置
+                        else if (!element.hasAttribute('readonly')) {
+                            element.value = paramValue;
+                            
+                            // 觸發select的change事件以處理相依欄位
+                            if (element.tagName === 'SELECT') {
+                                const event = new Event('change');
+                                element.dispatchEvent(event);
+                            }
+                            
+                            // 觸發radio button的change事件
+                            if (element.type === 'radio') {
+                                const event = new Event('change');
+                                element.dispatchEvent(event);
+                            }
+                        }
+                    }
+                });
+            };
             
             fillFormFromUrl();
             
