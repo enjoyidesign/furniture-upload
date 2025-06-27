@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>家具再利用家具上傳表單</title>
+    <title>公益家具再利用家具上傳表單</title>
     <style>
         :root {
             --primary-color: #4CAF50;
@@ -856,19 +856,24 @@
                 
                 // 第二期限應在第一期限之後
                 firstDeadline.addEventListener('change', function() {
+                    console.log('第一期限改變:', this.value); // 除錯用
                     if (this.value) {
                         const firstDate = new Date(this.value);
                         const secondMinDate = new Date(firstDate);
                         secondMinDate.setDate(firstDate.getDate() + 1);
-                        secondDeadline.min = secondMinDate.toISOString().split('T')[0];
+                        const minDateString = secondMinDate.toISOString().split('T')[0];
+                        secondDeadline.min = minDateString;
+                        console.log('設定第二期限最小值:', minDateString); // 除錯用
                         
                         // 如果第二期限早於或等於第一期限，則清空第二期限
                         if (secondDeadline.value && new Date(secondDeadline.value) <= firstDate) {
                             secondDeadline.value = '';
+                            console.log('清空第二期限，因為日期衝突'); // 除錯用
                         }
                     } else {
                         // 如果第一期限被清空，移除第二期限的限制
                         secondDeadline.min = '';
+                        console.log('移除第二期限限制'); // 除錯用
                     }
                 });
                 
@@ -877,7 +882,9 @@
                     const firstDate = new Date(firstDeadline.value);
                     const secondMinDate = new Date(firstDate);
                     secondMinDate.setDate(firstDate.getDate() + 1);
-                    secondDeadline.min = secondMinDate.toISOString().split('T')[0];
+                    const minDateString = secondMinDate.toISOString().split('T')[0];
+                    secondDeadline.min = minDateString;
+                    console.log('頁面載入時設定第二期限最小值:', minDateString); // 除錯用
                 }
             };
             
