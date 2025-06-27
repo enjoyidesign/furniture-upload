@@ -847,18 +847,13 @@
                 }
             });
             
-            // 設置日期選擇最小值為3天後
+            // 設置日期選擇 - 移除第一領取期限的所有日期限制
             const setMinDates = function() {
-                const today = new Date();
-                const minDate = new Date(today);
-                minDate.setDate(today.getDate() + 3);
-                
                 const firstDeadline = document.getElementById('firstDeadline');
                 const secondDeadline = document.getElementById('secondDeadline');
                 
-                const formattedMinDate = minDate.toISOString().split('T')[0];
-                firstDeadline.min = formattedMinDate;
-                secondDeadline.min = formattedMinDate;
+                // 第一領取期限不設置最小日期限制，可以選擇任何日期（包括過去）
+                // firstDeadline.min 不設置
                 
                 // 第二期限應在第一期限之後
                 firstDeadline.addEventListener('change', function() {
@@ -867,7 +862,7 @@
                         secondMinDate.setDate(secondMinDate.getDate() + 1);
                         secondDeadline.min = secondMinDate.toISOString().split('T')[0];
                         
-                        // 如果第二期限早於第一期限，則清空第二期限
+                        // 如果第二期限早於或等於第一期限，則清空第二期限
                         if (secondDeadline.value && new Date(secondDeadline.value) <= new Date(this.value)) {
                             secondDeadline.value = '';
                         }
