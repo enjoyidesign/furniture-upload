@@ -910,14 +910,36 @@
             document.getElementById('furnitureForm').addEventListener('submit', function(e) {
                 e.preventDefault();
                 
+                // 保存當前URL參數，以便返回時保持預填
+                const currentUrlParams = window.location.search;
+                
                 // 立即顯示感謝頁面
                 const formContainer = document.querySelector('.container');
                 formContainer.innerHTML = `
                     <div class="success-message" style="text-align: center; padding: 50px 20px;">
                         <h2 style="color: var(--primary-color); margin-bottom: 20px;">感謝！已收到您提交的資訊。</h2>
                         <p>我們將盡快處理您的家具再利用申請。</p>
+                        <button id="continueUploadBtn" style="
+                            background-color: #4472c4;
+                            color: white;
+                            border: none;
+                            padding: 12px 24px;
+                            font-size: 16px;
+                            cursor: pointer;
+                            border-radius: 4px;
+                            margin-top: 20px;
+                            transition: background-color 0.3s;
+                        " onmouseover="this.style.backgroundColor='#3a63ad'" onmouseout="this.style.backgroundColor='#4472c4'">
+                            繼續上傳
+                        </button>
                     </div>
                 `;
+                
+                // 為繼續上傳按鈕添加事件監聽器
+                document.getElementById('continueUploadBtn').addEventListener('click', function() {
+                    // 重新載入頁面並保持URL參數
+                    window.location.href = window.location.pathname + currentUrlParams;
+                });
                 
                 // 滾動到頁面頂部
                 window.scrollTo(0, 0);
