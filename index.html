@@ -914,18 +914,21 @@
                         else if (element.name === 'mode') {
                             element.value = paramValue;
                         }
+                        // 處理radio button
+                        else if (element.type === 'radio') {
+                            if (element.value === paramValue) {
+                                element.checked = true;
+                                // 觸發change事件以處理相依欄位
+                                const event = new Event('change');
+                                element.dispatchEvent(event);
+                            }
+                        }
                         // 其他唯讀欄位不允許通過URL設置
                         else if (!element.hasAttribute('readonly')) {
                             element.value = paramValue;
                             
                             // 觸發select的change事件以處理相依欄位
                             if (element.tagName === 'SELECT') {
-                                const event = new Event('change');
-                                element.dispatchEvent(event);
-                            }
-                            
-                            // 觸發radio button的change事件
-                            if (element.type === 'radio') {
                                 const event = new Event('change');
                                 element.dispatchEvent(event);
                             }
