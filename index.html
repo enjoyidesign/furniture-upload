@@ -333,7 +333,7 @@
             justify-content: center;
         }
         
-        /* 新增：單選框樣式 */
+        /* 單選框樣式 */
         .radio-group {
             display: flex;
             flex-direction: column;
@@ -363,6 +363,8 @@
         .contact-person-details.show {
             display: block;
         }
+
+
     </style>
 </head>
 <body>
@@ -371,6 +373,9 @@
         <div class="subtitle">讓您不需要的家具，成為他人寶貴資源</div>
         
         <form id="furnitureForm" method="POST">
+            <!-- 隱藏的模式選擇 -->
+            <input type="hidden" id="modeAdd" name="mode" value="add">
+
             <!-- 第一區塊：家具提供者資訊 -->
             <div class="form-section">
                 <h2>家具提供者資訊</h2>
@@ -429,7 +434,7 @@
                         <input type="text" id="furnitureName" name="furnitureName" required>
                     </div>
                     
-                    <!-- 新增：家具數量欄位 -->
+                    <!-- 家具數量欄位 -->
                     <div class="form-group col-half">
                         <label for="furnitureQuantity" class="required">家具數量</label>
                         <input type="number" id="furnitureQuantity" name="furnitureQuantity" min="1" step="1" required placeholder="請輸入數量">
@@ -495,7 +500,7 @@
                     <input type="text" id="address" name="address" required placeholder="請輸入詳細地址">
                 </div>
                 
-                <!-- 新增：取件聯絡人選項 -->
+                <!-- 取件聯絡人選項 -->
                 <div class="form-group">
                     <label class="required">取件聯絡人</label>
                     <div class="radio-group">
@@ -567,7 +572,7 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="photos" class="required">家具照片上傳</label>
+                    <label for="photos" id="photosLabel" class="required">家具照片上傳</label>
                     <div class="photo-upload">
                         <p>請上傳家具照片（最多4張，每張不超過5MB，支援JPG/PNG格式）</p>
                         <input type="file" id="photos" name="photos" accept=".jpg,.jpeg,.png" multiple required>
@@ -675,7 +680,28 @@
                 }
             });
             
-            // 新增：取件聯絡人選項控制
+            // 新增：模式選擇控制照片上傳必填狀態
+            const modeInput = document.getElementById('modeAdd');
+            const photosInput = document.getElementById('photos');
+            const photosLabel = document.getElementById('photosLabel');
+            
+            function updatePhotoRequirement() {
+                if (modeInput.value === 'edit') {
+                    // 修改模式：照片非必填
+                    photosInput.required = false;
+                    photosLabel.classList.remove('required');
+                } else {
+                    // 新增模式：照片必填
+                    photosInput.required = true;
+                    photosLabel.classList.add('required');
+                }
+            }
+            
+            // 監聽模式變化（當URL參數改變時）
+            const observer = new MutationObserver(updatePhotoRequirement);
+            observer.observe(modeInput, { attributes: true, attributeFilter: ['value'] });
+            
+            // 取件聯絡人選項控制
             const contactSameRadio = document.getElementById('contactSame');
             const contactOtherRadio = document.getElementById('contactOther');
             const contactPersonDetails = document.getElementById('contactPersonDetails');
@@ -884,6 +910,10 @@
                         if (element.id === 'lineId' || element.id === 'furnitureId') {
                             element.value = paramValue;
                         } 
+                        // 對於mode隱藏欄位，允許通過URL設置
+                        else if (element.name === 'mode') {
+                            element.value = paramValue;
+                        }
                         // 其他唯讀欄位不允許通過URL設置
                         else if (!element.hasAttribute('readonly')) {
                             element.value = paramValue;
@@ -902,6 +932,9 @@
                         }
                     }
                 });
+                
+                // 在URL參數設置後更新照片要求
+                updatePhotoRequirement();
             };
             
             fillFormFromUrl();
@@ -1007,6 +1040,12 @@
                     'same': '同家具提供者',
                     'other': '其他'
                 };
+
+                // 操作模式中文對照表
+                const modeNames = {
+                    'add': '新增',
+                    'edit': '修改'
+                };
                 
                 // 轉換縣市為中文
                 if (formData.get('city') && cityNames[formData.get('city')]) {
@@ -1038,6 +1077,11 @@
                 // 轉換取件聯絡人為中文
                 if (formData.get('contactPerson') && contactPersonNames[formData.get('contactPerson')]) {
                     formData.set('contactPerson', contactPersonNames[formData.get('contactPerson')]);
+                }
+
+                // 轉換操作模式為中文
+                if (formData.get('mode') && modeNames[formData.get('mode')]) {
+                    formData.set('mode', modeNames[formData.get('mode')]);
                 }
                 
                 // 背景送出資料到webhook
